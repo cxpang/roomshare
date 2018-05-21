@@ -1,0 +1,14 @@
+/yii
+/yii_test
+/yii_test.bat
+.idea
+nbproject
+.buildpath
+.projects
+.settings
+Thumbs.db
+vendor
+.DS_Store
+/phpunit.xml
+phpunit.phar
+/.vagrant
