@@ -11,6 +11,7 @@ return [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'language'=>'zh-CN',
+    'timeZone' => 'Asia/Shanghai',
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [

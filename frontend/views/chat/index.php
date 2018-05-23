@@ -12,49 +12,18 @@ $this->title = '聊天中心';
     <div data-role="content" class="container" role="main">
         <div id="chat-div" class="col-md-8" style="border: 1px solid #ccc;overflow: auto;height: 600px">
         <ul id="chat-content" class="content-reply-box mg10">
-            <li class="odd">
-                <a class="user" href="#">
-                    <img class="img-responsive avatar_" src="/roomshare/uploads/agent2.jpg" alt="">
-                    <span class="user-name">奔波儿灞</span>
-                </a>
-                <div class="reply-content-box">
-                    <span class="reply-time">03-08 15：00</span>
-                    <div class="reply-content pr">
-                        <span class="arrow">&nbsp;</span>
-                        为什么小鑫的名字里有三个金呢？
-                    </div>
-                </div>
-            </li>
+
             <li class="even">
                 <a class="user" href="#"><img class="img-responsive avatar_" src="/roomshare/uploads/agent1.jpg" alt=""><span class="user-name">灞波儿奔</span></a>
                 <div class="reply-content-box">
-                    <span class="reply-time">03-08 15：10</span>
+                    <span class="reply-time"><?=date('Y-m-d H:i:s',time())?></span>
                     <div class="reply-content pr">
                         <span class="arrow">&nbsp;</span>
-                        他命里缺金，所以取名叫鑫，有些人命里缺水，就取名叫淼，还有些人命里缺木就叫森。
+                        您好有什么问题可以帮您
                     </div>
                 </div>
             </li>
-            <li class="odd">
-                <a class="user" href="#"><img class="img-responsive avatar_" src="/roomshare/uploads/agent2.jpg" alt=""><span class="user-name">奔波儿灞</span></a>
-                <div class="reply-content-box">
-                    <span class="reply-time">03-08 15：20</span>
-                    <div class="reply-content pr">
-                        <span class="arrow">&nbsp;</span>
-                        那郭晶晶命里缺什么？
-                    </div>
-                </div>
-            </li>
-            <li class="even">
-                <a class="user" href="#"><img class="img-responsive avatar_" src="/roomshare/uploads/agent1.jpg" alt=""><span class="user-name">灞波儿奔</span></a>
-                <div class="reply-content-box">
-                    <span class="reply-time">03-08 15：30</span>
-                    <div class="reply-content pr">
-                        <span class="arrow">&nbsp;</span>
-                        此处省略一百字...
-                    </div>
-                </div>
-            </li>
+
         </ul>
 
 
@@ -125,8 +94,8 @@ $this->title = '聊天中心';
         else{
             var now=gettime();
             var i="<li class='odd'> <a class='user' href='#'>";
-            i+=" <img class='img-responsive avatar_' src='/roomshare/uploads/agent2.jpg' alt=''>";
-            i+="<span class='user-name'>奔波儿灞</span></a>";
+            i+=" <img class='img-responsive avatar_' src='<?=\common\models\UserInfo::GetUserImage(Yii::$app->user->getId())?>' alt=''>";
+            i+="<span class='user-name'><?=Yii::$app->user->identity->username?></span></a>";
             i+="<div class='reply-content-box'>";
             i+=" <span class='reply-time'>"+now+"</span>";
             i+="<div class='reply-content pr'>";
