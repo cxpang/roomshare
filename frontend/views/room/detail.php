@@ -213,7 +213,7 @@ $roomimagearray=explode(",",$roomimagestring);
                           房源可靠，面向学生，安全保证
                       </span>
                   </div>
-                <a href="<?=Url::to(['chat/index'])?>" target="_blank" style="margin-top: 20px;margin-bottom: 20px;" type="button" class="btn btn-block btn-lg btn-info">发送私信</a>
+                <a href="<?=Url::to(['chat/index','touser'=>$data['user_id']])?>" target="_blank" style="margin-top: 20px;margin-bottom: 20px;" type="button" class="btn btn-block btn-lg btn-info">发送私信</a>
             </div>
         </div>
     </div>

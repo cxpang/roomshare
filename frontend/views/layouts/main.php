@@ -91,7 +91,7 @@ AppAsset::register($this);
                         <li><a href="<?=Url::to(['person/index'])  ?>">个人中心</a></li>
                         <li><a href="<?=Url::to(['myroom/index'])  ?>">我的合租</a></li>
                         <li><a href="<?=Url::to(['myforum/index'])  ?>">我的论坛</a></li>
-                        <li><a href="<?=Url::to(['chatpoint/index'])  ?>">我的聊天</a></li>
+                        <li><a href="<?=Url::to(['chat/center'])  ?>">我的聊天</a></li>
                         <li><?php   echo Html::beginForm(['/site/logout'], 'post').Html::submitButton(
                                     '退出' ,['class'=>'buttonlogout']
                                 ).Html::endForm() ;     ?></li>

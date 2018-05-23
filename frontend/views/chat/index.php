@@ -6,7 +6,8 @@ use janisto\timepicker\TimePicker;
 use common\models\Room;
 use common\models\City;
 use common\models\Area;
-$this->title = '聊天中心';
+$this->title = '私聊用户';
+
 ?>
 <div data-role="page" style="margin-top: 100px">
     <div data-role="content" class="container" role="main">
@@ -14,12 +15,12 @@ $this->title = '聊天中心';
         <ul id="chat-content" class="content-reply-box mg10">
 
             <li class="even">
-                <a class="user" href="#"><img class="img-responsive avatar_" src="/roomshare/uploads/agent1.jpg" alt=""><span class="user-name">灞波儿奔</span></a>
+                <a class="user" href="#"><img class="img-responsive avatar_" src="<?=$to_user['user_picture']?>" alt=""><span class="user-name"><?=$to_user['username']?></span></a>
                 <div class="reply-content-box">
                     <span class="reply-time"><?=date('Y-m-d H:i:s',time())?></span>
                     <div class="reply-content pr">
                         <span class="arrow">&nbsp;</span>
-                        您好有什么问题可以帮您
+                        您好，我是房主<?=$to_user['username']?>，很高兴为您服务，请问有什么可以帮您？
                     </div>
                 </div>
             </li>
@@ -85,6 +86,77 @@ $this->title = '聊天中心';
     .linear-g{background: -moz-linear-gradient(top, #fdfdfd, #f6f6f6);background: -webkit-gradient(linear,top,from(#fdfdfd),to(#f6f6f6));background: -webkit-linear-gradient(top, #fdfdfd, #f6f6f6);background: -o-linear-gradient(top, #fdfdfd, #f6f6f6);box-shadow:0 0 5px #ccc;}
 </style>
 <script>
+    var socket = null; //初始为null
+    var touser=null;
+    var isLogin = false; //是否登录到服务器上
+
+    window.onload = function(){
+        var userid="<?=Yii::$app->user->identity->getId()?>";
+        socket = new WebSocket("ws://120.79.130.178:8484");
+        socket.onopen = function() {
+            socket.send('login:' + userid);
+        };
+        socket.onmessage=function (e) {
+            var getMsg = e.data;
+            if(/^notice:success$/.test(getMsg)) { //服务器验证通过
+                isLogin = true;
+            }
+            else if(/^msg:/.test(getMsg)) { //代表是普通消息
+                console.log(getMsg);
+                var now=gettime();
+                var i="<li class='even'> <a class='user' href='#'>";
+                i+=" <img class='img-responsive avatar_' src='<?=$to_user['user_picture']?>' alt=''>";
+                i+="<span class='user-name'><?=$to_user['username']?></span></a>";
+                i+="<div class='reply-content-box'>";
+                i+=" <span class='reply-time'>"+now+"</span>";
+                i+="<div class='reply-content pr'>";
+                i+="<span class='arrow'>&nbsp;</span>";
+                i+=getMsg.replace('msg:','');
+                i+="</div></div></li>";
+
+
+                $("#chat-content").append(i);
+            }
+            else if(/^users:/.test(getMsg)){ //显示当前已登录用户
+                console.log(getMsg);
+
+
+                getMsg = getMsg.replace('users:','');
+                getMsg= eval('('+getMsg+')'); //转json
+                findkey(getMsg);
+
+
+            }
+
+        }
+        socket.onclose = function(){
+            isLogin = false;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    function findkey(obj) {
+        $.each(obj, function(key, val) {
+            if(val=="<?=$to_user['id'] ?>"){
+                touser= key;
+            }
+        });
+    }
+
+
     function sendmessage() {
         message=$("#input-message").val();
         if($.trim(message).length==0){
@@ -92,6 +164,7 @@ $this->title = '聊天中心';
             $("#input-message").focus();
         }
         else{
+            socket.send('chat:<'+touser+'>:'+message);
             var now=gettime();
             var i="<li class='odd'> <a class='user' href='#'>";
             i+=" <img class='img-responsive avatar_' src='<?=\common\models\UserInfo::GetUserImage(Yii::$app->user->getId())?>' alt=''>";
@@ -107,7 +180,6 @@ $this->title = '聊天中心';
             $("#input-message").val("");
             $("#input-message").focus();
         }
-
     }
     //获取当前时间
     function gettime() {
@@ -122,4 +194,6 @@ $this->title = '聊天中心';
         var now=year+'-'+month+"-"+date+" "+h+':'+m+":"+s;
         return now;
     }
+
+
 </script>
