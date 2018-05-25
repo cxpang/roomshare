@@ -140,14 +140,6 @@ $this->title = '私聊用户';
 
 
 
-
-
-
-
-
-
-
-
     function findkey(obj) {
         $.each(obj, function(key, val) {
             if(val=="<?=$to_user['id'] ?>"){
