@@ -2,6 +2,7 @@
 use common\models\UserInfo;
 use common\models\User;
 use common\models\Chatpoint;
+use yii\helpers\Url;
 $this->title = '私聊用户';
 
 ?>
@@ -68,7 +69,7 @@ $this->title = '私聊用户';
             <?php if(isset($to_chats)){
                    foreach ($to_chats as $row){
                 ?>
-            <li id="chatlist<?=$row['fromid']?>" onclick="changechat(<?=$row['fromid']?>,'<?=User::GetUserName($row["fromid"])?>','<?=UserInfo::GetUserImage($row["fromid"])?>')" style="border-bottom: 1px solid #ccc;cursor: pointer;">
+            <li id="chatlist<?=$row['fromid']?>" onclick="changechat(<?=$row['id']?>,<?=$row['fromid']?>,'<?=User::GetUserName($row["fromid"])?>','<?=UserInfo::GetUserImage($row["fromid"])?>')" style="border-bottom: 1px solid #ccc;cursor: pointer;">
                 <span>
                     <img class="img-circle  avatar_"  src="<?=UserInfo::GetUserImage($row['fromid'])?>">
                     <strong><?=User::GetUserName($row['fromid'])?></strong>
@@ -82,7 +83,7 @@ $this->title = '私聊用户';
             <?php if(isset($from_chats)){
                 foreach ($from_chats as $row){
                     ?>
-                    <li id="chatlist<?=$row['toid']?>" onclick="changechat(<?=$row['toid']?>,'<?=User::GetUserName($row["toid"])?>','<?=UserInfo::GetUserImage($row["toid"])?>')"   style="border-bottom: 1px solid #ccc;cursor: pointer;">
+                    <li id="chatlist<?=$row['toid']?>" onclick="changechat(<?=$row['id']?>,<?=$row['toid']?>,'<?=User::GetUserName($row["toid"])?>','<?=UserInfo::GetUserImage($row["toid"])?>')"   style="border-bottom: 1px solid #ccc;cursor: pointer;">
                 <span>
                     <img class="img-circle  avatar_"  src="<?=UserInfo::GetUserImage($row['toid'])?>">
                     <strong><?=User::GetUserName($row['toid'])?></strong>
@@ -186,6 +187,7 @@ $this->title = '私聊用户';
     var to_user_id=null;
     var to_user_name=null;
     var to_user_picture=null;
+    var to_chat_id=null;
     window.onload=function(){
         $(".yy_ul li").hover(function(){
                 $(this).addClass('li_yysy');
@@ -209,7 +211,7 @@ $this->title = '私聊用户';
     //     });
     // }
 
-    function changechat(user_id,username,user_picture) {
+    function changechat(chatid,user_id,username,user_picture) {
         var content="正在与"+username+"在线聊天中";
         $("#chat-tips").html(content);
         $("#chat-div-main").children('div').addClass('yincang');
@@ -217,6 +219,8 @@ $this->title = '私聊用户';
         to_user_id=user_id;
         to_user_name=username;
         to_user_picture=user_picture;
+        to_chat_id=chatid;
+
         chating();
 
     }
@@ -255,7 +259,6 @@ $this->title = '私聊用户';
                 getMsg = getMsg.replace('users:','');
                 getMsg= eval('('+getMsg+')'); //转json
                 // findkey(getMsg);
-                console.log(to_user_id);
                 touser=null;
                 $.each(getMsg, function(key, val) {
                     if(val==to_user_id){
@@ -263,7 +266,6 @@ $this->title = '私聊用户';
                     }
 
                 });
-                console.log(touser);
 
             }
 
@@ -279,6 +281,27 @@ $this->title = '私聊用户';
         if($.trim(message).length==0){
             alert("发送消息不能为空");
             $("#input-message").focus();
+        }
+        else if(!touser){
+        //    保存离线消息到数据库中
+            var formdata=new FormData();
+            formdata.append('to_chat_id',to_chat_id);
+            formdata.append('message',message);
+            $.ajax(
+                {
+                    url:'<?=Url::to(['chat/chatcentersave'])?>',
+                    type:'POST',
+                    cache:false,
+                    data:formdata,
+
+                    processData:false,
+                    contentType:false,
+                    success:function (data) {
+                         alert("用户离线，我们将在用户上线时通知用户");
+                         $("#input-message").val("");
+                    }
+                }
+            )
         }
         else{
             socket.send('chat:<'+touser+'>:'+message);

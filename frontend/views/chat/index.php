@@ -7,7 +7,6 @@ use common\models\Room;
 use common\models\City;
 use common\models\Area;
 $this->title = '私聊用户';
-
 ?>
 <div data-role="page" style="margin-top: 100px">
     <div data-role="content" class="container" role="main">
@@ -19,8 +18,14 @@ $this->title = '私聊用户';
                 <div class="reply-content-box">
                     <span class="reply-time"><?=date('Y-m-d H:i:s',time())?></span>
                     <div class="reply-content pr">
+                        <?php if(!$to_user['message']){?>
                         <span class="arrow">&nbsp;</span>
                         您好，我是房主<?=$to_user['username']?>，很高兴为您服务，请问有什么可以帮您？
+                        <?php } ?>
+                        <?php if($to_user['message']){?>
+                            <span class="arrow">&nbsp;</span>
+                            <?=$to_user['message']?>
+                        <?php } ?>
                     </div>
                 </div>
             </li>
@@ -154,6 +159,27 @@ $this->title = '私聊用户';
         if($.trim(message).length==0){
             alert("发送消息不能为空");
             $("#input-message").focus();
+        }
+        else if(!touser){
+            //    保存离线消息到数据库中
+            var formdata=new FormData();
+            formdata.append('toid',<?=$to_user['id']?>);
+            formdata.append('message',message);
+            $.ajax(
+                {
+                    url:'<?=Url::to(['chat/chatindexsave'])?>',
+                    type:'POST',
+                    cache:false,
+                    data:formdata,
+
+                    processData:false,
+                    contentType:false,
+                    success:function (data) {
+                        alert("用户离线，我们将在用户上线时通知用户");
+                        $("#input-message").val("");
+                    }
+                }
+            )
         }
         else{
             socket.send('chat:<'+touser+'>:'+message);
