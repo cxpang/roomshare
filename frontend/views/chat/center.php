@@ -227,7 +227,7 @@ $this->title = '私聊用户';
     //聊天辅助函数
     function chating() {
         var userid="<?=Yii::$app->user->identity->getId()?>";
-        socket = new WebSocket("ws://120.79.130.178:8484");
+        socket = new WebSocket("ws://120.24.97.50:8484");
         socket.onopen = function() {
             socket.send('login:' + userid);
         };
