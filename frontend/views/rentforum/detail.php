@@ -6,7 +6,7 @@ use   yii\helpers\Url;
 use common\models\UserInfo;
 use common\models\User;
 use yii\bootstrap\ActiveForm;
-$this->title="论坛详细信息";
+$this->title="论坛详细信息"
 ?>
 <div class="container" style="margin-bottom: 50px">
     <div class="row clearfix">
@@ -72,7 +72,10 @@ $this->title="论坛详细信息";
                                 echo '<div style="margin-top:50px" class="alert alert-' . $key . '">' . $message . "</div>\n";
                             }
                             ?>
-                            <?php foreach ($data['comments'] as $row){?>
+                            <?php foreach ($data['comments'] as $row){
+
+                                ?>
+
                                 <div class="col-md-12" style="margin-top: 20px;border-top: solid 1px #ccc;">
 
                                     <div class="col-md-1" style="margin-top: 10px">

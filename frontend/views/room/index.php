@@ -89,7 +89,9 @@ $this->title = '校园租客';
             <a href="<?=Url::to(['room/detail','room_id'=>$row['room_id']])?>">
 
                 <div class="col-md-4 columnroom">
-                    <img class="images" src="<?=Room::Delemiteroom($row['room_images'])?>">
+                    <div class="col-lg-12">
+                        <img class="images" src="<?=Room::Delemiteroom($row['room_images'])?>">
+                    </div>
                     <div class="itemcontents">
                         <div>
                         <strong><span style="font-size: 20px;color: red"><img src="/roomshare/uploads/yuan.jpg"><?=$row['room_price']?></span></strong>
@@ -136,8 +138,8 @@ $this->title = '校园租客';
         margin-top: 20px;
     }
     .images{
-        width: 350px;
-        height: 250px;
+        max-width: 100%;
+        max-height: 100%;
         border-radius:5%;
     }
     .itemcontents{
